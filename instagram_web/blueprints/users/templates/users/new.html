@@ -1,1 +1,27 @@
-<h1>Users#new</h1>
+{% extends "_layout.html" %}
+
+{% block content %}
+
+
+
+<form action="{{ url_for('users.create') }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="text" name="username" placeholder="username"/>
+    <input type="email" name="email" placeholder="email"/>
+    <input type="password" name="password" placeholder="password"/>
+    <button type="submit">Submit</button>
+
+
+</form>
+
+
+<!-- <p>
+this is my sign up page
+
+1.have a route to display my page
+2.get information from user
+3.process that information
+4.create new user and save it inside db
+
+</p> -->
+{% endblock %}
