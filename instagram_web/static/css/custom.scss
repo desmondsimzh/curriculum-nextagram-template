@@ -1,3 +1,9 @@
+@import 'variables';
+@import 'auth';
+@import 'home';
+@import 'edit';
+
+
 body {
   margin: 0;
   padding-bottom: 15px;
@@ -18,4 +24,11 @@ footer {
 footer a {
   text-decoration: none;
   color: #303030;
+}
+
+.styled_form_div{
+  width: 600px;
+  margin: 30px auto;
+  text-align: left;
+  height: 100%;
 }
