@@ -34,7 +34,7 @@ class User(UserMixin, BaseModel):
         #     self.password=generate_password_hash(self.password)
     @hybrid_property
     def user_profile_picture_url(self):
-        return Config.S3_LOCATION + self.profile_picture
+        return str(Config.S3_LOCATION) + self.profile_picture
 
     def is_authenticated():
         return True

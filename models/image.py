@@ -13,7 +13,7 @@ class Image(UserMixin, BaseModel):
     
     @hybrid_property
     def user_images_url(self):
-        return Config.S3_LOCATION + self.img_file_name
+        return str(Config.S3_LOCATION) + self.img_file_name
 
     def is_authenticated():
         return True
