@@ -21,18 +21,13 @@ def new():
 @users_blueprint.route('/', methods=['POST']) #use POST request to submit the form
 def create():
     # Form data is sent to this route
-    
     # Get form data
-    
-    # Create a new user from that data
-
-    # Use pw to create a new instance of a user
-    # Save it inside the db
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
     hashed_password = generate_password_hash(password)
     u = User(name = request.form.get('username') , email = email, password = hashed_password )
+    # Save it inside the db
     if u.save():
         flash('Sign up successfully !')
         return redirect(url_for('users.new'))
@@ -41,9 +36,10 @@ def create():
    
 
 
-@users_blueprint.route('/<username>', methods=["GET"]) #to show profile
+@users_blueprint.route('/<username>/profile', methods=["GET"]) #to show profile
+@login_required
 def show(username):
-    pass
+    return render_template('users/show.html', username = current_user.name)
 
 
 @users_blueprint.route('/', methods=["GET"]) #to show post feed
@@ -59,7 +55,7 @@ def edit(id):
     if current_user.id ==  user.id: #and current_user.is_authenticated: # current_user method is from Flask-Login
         return render_template("users/edit.html", user=user)
     else:
-        flash(f"You are not allowed to update {user.username} profile","danger")
+        flash(f"You are not allowed to update {user.name}'s profile","danger")
         return render_template('users/show.html', user=current_user)
 
 
@@ -80,29 +76,32 @@ def update(id):
             flash("Cannot update profile","danger")
             return render_template("users/edit.html", user=user)
     else:
-        flash(f"You are not allowed to update {user.name} profile","danger")
+        flash(f"You are not allowed to update {user.name}'s profile","danger")
         return render_template("users/edit.html", user=user)
     
 @users_blueprint.route('/<id>/picture', methods=['POST']) #to update profile
 @login_required
-def update_picture(id):
+def update_profile_picture(id):
     # get file from request
+    if "user_file" not in request.files:
+        flash("Unable to upload file, please try agian", "danger")
+        return render_template('users/edit.html')
     file = request.files["user_file"]
     # if no file in request
-    if not file:
-        flash("Please choose a file.", 'danger')
-        return render_template('images/new.html')
+    # if not file:
+    #     error = "Please Try Agian!"
+    #     return render_template('users/edit.html', error=error)
     # if file in request
     file.filename = secure_filename(file.filename)
     output = upload_file_to_s3(file) #upload_file_to_s3(file), this func is import from helpers.py
     # if no image link get from upload function
     if not output:
         flash("Unable to upload file, please try agian", "danger")
-        return render_template('images/new.html')
+        return render_template('users/edit.html')
     # if img link return, means upload successful
     else:
         # get current_user
-        user = User.update(profile_picture = output).where(User.id == current_user.id)
+        user = User.update(profile_picture = file.filename).where(User.id == current_user.id)
         # save profile image link in user class
         user.execute()
         # print(output)

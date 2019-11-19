@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash, Flask
 from models.image import Image
+from models.user import User
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
@@ -12,16 +13,16 @@ images_blueprint = Blueprint('images',
 
 
 
-@images_blueprint.route('/new', methods=['GET'])
+@images_blueprint.route('/<id>/new', methods=['GET'])
 @login_required
-def new():
+def new(id):
     return render_template('images/new.html')
     
 @images_blueprint.route('/<id>/picture', methods=['POST']) #to update profile
 @login_required
-def update_picture(id):
+def create_picture(id):
     # get file from request
-    file = request.files["user_file"]
+    file = request.files["img_file"]
     # if no file in request
     if not file:
         flash("Please choose a file.", 'danger')
@@ -36,10 +37,17 @@ def update_picture(id):
     # if img link return, means uploaod successful
     else:
         # get current_user
-        user = User.update(profile_picture = output).where
+        user = User.get_or_none(User.id == id)
+        image = Image.create(img_file_name = file.filename, user_id = user)
         # save profile image link in user class
-        user.execute()
-        # print(output)
-        flash("Profile picture updated", "success")
-        return redirect(url_for('user.show', username=current_user.name))
+        image.save()
+        flash("Image uploaded successfully!", "success")
+        return redirect(url_for('images.new', id=id))
 
+@images_blueprint.route('/<id>/delete') #to update profile
+@login_required
+def delete_picture(id):
+    delete_image = Image.delete().where(Image.id == id )
+    delete_image.execute()
+    flash("Image has been deleted!", "primary")
+    return redirect(url_for('home'))

@@ -50,7 +50,7 @@
             Search
           </button>
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -73,12 +73,13 @@
               <a class="nav-link" href="/"
                 >Home <span class="sr-only">(current)</span></a
               >
-            </li>
+            </li> -->
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link" href="images/new"
-                  >Upload_Image</a
-                >
+                <a class="nav-link" href="/users/{{current_user.name}}/profile">Profile</a>
+              </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/images/{{ current_user }}/new">Upload_Image</a>
               </li>
             <li class="nav-item">
               <a class="nav-link" href="/users/{{ current_user }}/edit"
@@ -105,6 +106,15 @@
     {% if current_user.is_authenticated %}
     <p>You are currently logged in as id: <b>{{current_user}}</b> username:  <b>{{current_user.name}}</b></p>
     {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %} 
+      {% if messages %} 
+      {% for category, message in messages %}
+      <div class="alert-{{ category }}" role="alert">
+        <h5>{{ message }}</h5>
+      </div>
+      {% endfor %} 
+      {% endif %} 
+    {% endwith %} 
     {% block content %} {% endblock %}
     <footer>
       Made with &hearts; at

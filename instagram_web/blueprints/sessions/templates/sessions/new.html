@@ -1,11 +1,5 @@
-{% extends "_layout.html" %} {% block content %} 
-{% with messages =
-    get_flashed_messages() %} {% if messages %} {% for message in messages %}
-    <div class="alert-success">
-      <h5>{{ message }}</h5>
-    </div>
-    {% endfor %} {% endif %} {% endwith %}  
-    {% if error %}
+{% extends "_layout.html" %} {% block content %}   
+  {% if error %}
     <div class="alert-danger"><p class=error><strong>Error:</strong> {{ error }}</div>
   {% endif %}
     <div class="styled_form_div">
@@ -32,6 +26,9 @@
           />
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
+        <a href="{{url_for('sessions.google_login')}}">
+          <img id="google_login_icon" src="https://desmond-nextagram.s3-ap-southeast-1.amazonaws.com/google.png" alt="google_login" />
+        </a>
       </form>
     </div>
     </p> 

@@ -1,0 +1,27 @@
+{% extends "_layout.html" %} 
+{% block content %}
+<div class="container">
+<h1>{{current_user.name}}'s profile page</h1>
+<div class="row">
+<img id="profile_img" src="{{ current_user.user_profile_picture_url }}" alt="profile_img" class="rounded-circle" />
+</div>
+</div>
+<br></br>
+<div class="container">
+    <div class="row">
+        <div class="card-columns">
+{% for image in current_user.images %}
+<div class="card">
+    <img src="{{ image.user_images_url }}" alt="profile_img" class="user_images_display rounded" />
+    <a href="/donations/{{ image.id }}/new">
+        <button type="submit" class="btn btn-primary">Donate</button>
+    </a>
+    <a href="/images/{{image.id}}/delete">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </a>
+</div>
+{% endfor %}
+</div>
+    </div>
+</div>
+{% endblock %}

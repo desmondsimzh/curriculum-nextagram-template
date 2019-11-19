@@ -1,6 +1,8 @@
 from models.base_model import BaseModel
 # from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
+from playhouse.hybrid import hybrid_property
+from config import Config
 import peewee as pw
 
 
@@ -30,6 +32,9 @@ class User(UserMixin, BaseModel):
         #     self.errors.append('Password must not more than 25 characters')
         # else:
         #     self.password=generate_password_hash(self.password)
+    @hybrid_property
+    def user_profile_picture_url(self):
+        return Config.S3_LOCATION + self.profile_picture
 
     def is_authenticated():
         return True
